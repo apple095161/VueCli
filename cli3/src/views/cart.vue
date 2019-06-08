@@ -20,7 +20,7 @@
           <a
             class="btn btn-sm btn-cart"
             data-toggle="dropdown"
-            @click.prevent="updatecart(cartproduct)"
+            
           >
             <i class="fas fa-cart-arrow-down fa-2x"></i>
             <span class="badge badge-pill badge-danger">{{arraylangth.length}}</span>

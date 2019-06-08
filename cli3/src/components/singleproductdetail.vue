@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header sticky-top container">
-      <cart :items="cartproduct" @update="getcart" ></cart>
+      <cart :items="getcartproduct" @update="getcart"></cart>
     </div>
     <div class="content">
       <div class="container">
@@ -234,7 +234,7 @@ export default {
 
       this.$http.get(api).then(response => {
         vm.product = response.data;
-        console.log(response);
+        //console.log(response);
       });
     },
     addtocart(id, qty = 1) {
@@ -256,7 +256,9 @@ export default {
           console.log(response);
           vm.status.loadItem = "";
           this.cartproduct = Object.assign({}, this.product);
+
           vm.getcart();
+        
         });
       }
     },
@@ -269,16 +271,14 @@ export default {
         //vm.getcartproduct = response.data.data;
         console.log(vm.getcartproduct);
         //vm.hideTable = response.data.data.total;
-        //console.log(vm.hideTable);
       });
     },
     openmodal(item) {
       const vm = this;
       $("#myModal").modal("show");
       vm.modalData = item;
-      console.log(item);
-    },
- 
+      //console.log(item);
+    }
   },
   watch: {
     counter(value) {
@@ -289,7 +289,7 @@ export default {
   },
   created() {
     this.productid = this.$route.params.productid;
-    console.log(this.productid);
+    //console.log(this.productid);
     this.getorder();
   }
 };
