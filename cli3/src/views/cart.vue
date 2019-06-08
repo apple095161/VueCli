@@ -17,7 +17,11 @@
 
       <div class="cart">
         <div class="dropdown ml-auto">
-          <a class="btn btn-sm btn-cart" data-toggle="dropdown">
+          <a
+            class="btn btn-sm btn-cart"
+            data-toggle="dropdown"
+            @click.prevent="updatecart(cartproduct)"
+          >
             <i class="fas fa-cart-arrow-down fa-2x"></i>
             <span class="badge badge-pill badge-danger">{{arraylangth.length}}</span>
           </a>
@@ -56,10 +60,15 @@
 export default {
   data() {
     return {
-        cartproduct:{},
+      cartproduct: {},
       getcartproduct: {},
       arraylangth: []
     };
+  },
+  props: {
+    items: {
+      type: Object
+    }
   },
   methods: {
     getcart() {
@@ -71,18 +80,21 @@ export default {
       this.$http.get(api).then(response => {
         vm.getcartproduct = response.data.data;
         vm.arraylangth = response.data.data.carts;
-        //console.log(vm.getcartproduct);
         //vm.hideTable = response.data.data.total;
-        //console.log(vm.hideTable);
+        console.log(vm.getcartproduct);
 
         vm.isLoading = false;
       });
+    },
+    updatecart(cartproduct) {
+      this.$emit("update", cartproduct);
     }
   },
 
   created() {
     this.getcart();
   },
+
   updated() {
     //console.log("資料更新了");
   }

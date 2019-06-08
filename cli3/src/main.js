@@ -4,8 +4,6 @@ import VueAxios from 'vue-axios';
 import Loading from 'vue-loading-overlay'; //使用載入時 讀取的效果 轉圈圈
 import 'vue-loading-overlay/dist/vue-loading.css';
 import 'bootstrap';
-import fancyBox from 'vue-fancybox';
-
 
 import currencyFilter from './filter/filter';
 import App from './App.vue';
@@ -20,8 +18,6 @@ axios.defaults.withCredentials = true; //跨站登入api使用此方法
 Vue.config.productionTip = false
 Vue.component('Loading', Loading);
 Vue.use(VueAxios, axios);
-Vue.component('fancyBox',fancyBox);
-
 Vue.filter('currency', currencyFilter);
 import './bus';
 

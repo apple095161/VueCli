@@ -2,7 +2,7 @@
   <div>
     <loading :active.sync="isLoading"></loading>
    <div class="header sticky-top container">
-    <router-view></router-view>
+    <Cart></Cart>
 
       <div class="wrapper my-2">
         <ul class="nav justify-content-center">
@@ -147,6 +147,7 @@
 
 <script>
 import $ from "jquery";
+import Cart from '../views/cart'
 export default {
   data() {
     return {
@@ -159,6 +160,9 @@ export default {
       },
       isLoading: false
     };
+  },
+  components:{
+    Cart
   },
   methods: {
     getProducts() {

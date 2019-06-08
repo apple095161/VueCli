@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header sticky-top container">
-      <router-view></router-view>
+      <cart :items="cartproduct" @update="getcart" ></cart>
     </div>
     <div class="content">
       <div class="container">
@@ -100,12 +100,15 @@
               <div class="row">
                 <a
                   class="col-md-6"
+                  data-toggle="modal"
+                  data-target=".bd-example-modal-lg"
                   href="#"
                   v-for="(item,index) in product"
                   :key="index"
                   style="height: 450px; width:100%; background-size: cover; background-position: center"
                   :style="{backgroundImage:`url(${item.imageUrl})`}"
                   v-if="item.title"
+                  @click.prevent="openmodal(item)"
                 ></a>
                 <div class="col-md-6" v-for="item in product" :key="item.id" v-if="item.title">
                   <div class="row product-title">
@@ -145,7 +148,7 @@
 
                     <button
                       class="btn btn-success ml-3"
-                      @click="addtocart(item.id,item.count)"
+                      @click="addtocart(item.id,item.counter);update=getcart"
                     >加入購物車</button>
                   </div>
                 </div>
@@ -155,15 +158,57 @@
         </div>
       </div>
     </div>
+
+    <!-- <div class="alert">
+      <div class="alert-title text-center mb-3">提示訊息</div>
+      <div class="alert-content text-center">你尚未選擇尺寸!!</div>
+      <a href="#" @click.prevent class="close-alert">
+        <i class="fas fa-window-close"></i>
+      </a>
+    </div>-->
+
+    <div class="alert alert-primary alert-dismissible fade" role="alert">
+      <div class="text-center" style="background-color">提示訊息!</div>
+      <br>
+      <div class="text-center" style="background-color:while">
+        <span>你尚未選擇尺寸</span>
+        <a href="#" @click.prevent class="close-alert">
+          <i class="fas fa-window-close"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- modal -->
+
+    <div
+      class="modal fade bd-example-modal-lg"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="myLargeModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg" style="width:800px">
+        <div class="modal-content">
+          <img :src="modalData.imageUrl" alt width="100%" height="800">
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import $ from "jquery";
+import cart from "../views/cart";
+$(document).ready(() => {
+  $(".close-alert").click(() => {
+    $(".alert").removeClass("show");
+  });
+});
 
 export default {
   data() {
     return {
+      modalData: {},
       cartproduct: {},
       isLoading: false,
       counter: 1,
@@ -177,6 +222,9 @@ export default {
       }
     };
   },
+  components: {
+    cart
+  },
   methods: {
     getorder() {
       const vm = this;
@@ -189,7 +237,7 @@ export default {
         console.log(response);
       });
     },
-    addtocart(id, qty = 1, size) {
+    addtocart(id, qty = 1) {
       const api = `${process.env.VUE_APP_APIPATH}/api/${
         process.env.VUE_APP_COUSTOMPATH
       }/cart`;
@@ -201,27 +249,36 @@ export default {
         qty: vm.counter,
         size: vm.size
       };
-      this.$http.post(api, { data: cart }).then(response => {
-        console.log(response);
-        vm.status.loadItem = "";
-        this.cartproduct = Object.assign({},this.product)
-
-        vm.getcart();
-      });
+      if (vm.size === "") {
+        $(".alert").addClass("show");
+      } else {
+        this.$http.post(api, { data: cart }).then(response => {
+          console.log(response);
+          vm.status.loadItem = "";
+          this.cartproduct = Object.assign({}, this.product);
+          vm.getcart();
+        });
+      }
     },
     getcart() {
       const api = `${process.env.VUE_APP_APIPATH}/api/${
         process.env.VUE_APP_COUSTOMPATH
       }/cart`;
       const vm = this;
-
       this.$http.get(api).then(response => {
         //vm.getcartproduct = response.data.data;
         console.log(vm.getcartproduct);
         //vm.hideTable = response.data.data.total;
         //console.log(vm.hideTable);
       });
-    }
+    },
+    openmodal(item) {
+      const vm = this;
+      $("#myModal").modal("show");
+      vm.modalData = item;
+      console.log(item);
+    },
+ 
   },
   watch: {
     counter(value) {
